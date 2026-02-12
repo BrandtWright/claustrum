@@ -1,0 +1,35 @@
+services:
+  claude:
+    build: .
+    image: claustrum
+    stdin_open: true
+    tty: true
+    init: true
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 4g
+          cpus: "2"
+          pids: 512
+    mem_swappiness: 0
+    memswap_limit: 4g
+    ulimits:
+      nofile:
+        soft: 4096
+        hard: 8192
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=512m
+      - /home/agent/.local/state:rw,noexec,nosuid,size=64m
+    environment:
+      - ANTHROPIC_API_KEY
+      - GIT_USER_NAME
+      - GIT_USER_EMAIL
+    volumes:
+      - ${HOME}/.claude:/home/agent/.claude
+      - ${HOME}/.claude.json:/home/agent/.claude.json
+      - ${PWD}:/workspace
