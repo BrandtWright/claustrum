@@ -9,7 +9,8 @@
 FROM alpine:3.21.3
 
 # hadolint ignore=DL3018
-RUN apk add --no-cache \
+RUN apk update && \
+    apk add --no-cache \
     bash \
     libgcc \
     coreutils \
@@ -44,7 +45,10 @@ RUN apk add --no-cache \
     openssh-client \
     # nvm needs these on Alpine
     libstdc++ \
-    linux-headers
+    linux-headers \
+    # ansible
+    ansible && \
+    pip3 install --upgrade pip
 
 RUN addgroup -g 1000 agent \
     && adduser -D -u 1000 -G agent -s /bin/bash -h /home/agent agent
